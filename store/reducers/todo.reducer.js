@@ -13,7 +13,7 @@ const initialState = {
 
 export function todoReducer(state = initialState, cmd) {
   switch (cmd.type) {
-    // Todos
+    // Todo
     case SET_TODOS:
       return {
         ...state,
