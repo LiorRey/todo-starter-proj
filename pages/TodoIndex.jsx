@@ -15,6 +15,7 @@ const { useSelector } = ReactRedux
 
 export function TodoIndex() {
   const todos = useSelector(storeState => storeState.todoModule.todos)
+  const isLoading = useSelector(storeState => storeState.todoModule.isLoading)
 
   // Special hook for accessing search-params:
   const [searchParams, setSearchParams] = useSearchParams()
@@ -58,11 +59,13 @@ export function TodoIndex() {
         </Link>
       </div>
       <h2>Todos List</h2>
-      <TodoList
-        todos={todos}
-        onRemoveTodo={onRemoveTodo}
-        onToggleTodo={onToggleTodo}
-      />
+      <div className={isLoading ? "loading" : ""}>
+        <TodoList
+          todos={todos}
+          onRemoveTodo={onRemoveTodo}
+          onToggleTodo={onToggleTodo}
+        />
+      </div>
       <hr />
       <h2>Todos Table</h2>
       <div style={{ width: "60%", margin: "auto" }}>

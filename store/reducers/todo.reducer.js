@@ -6,9 +6,13 @@ export const REMOVE_TODO = "REMOVE_TODO"
 export const UNDO_TODOS = "UNDO_TODOS"
 export const SET_FILTER_BY = "SET_FILTER_BY"
 
+// isLoading
+export const SET_IS_LOADING = "SET_IS_LOADING"
+
 const initialState = {
   todos: [],
   lastTodos: [],
+  isLoading: false,
 }
 
 export function todoReducer(state = initialState, cmd) {
@@ -42,7 +46,15 @@ export function todoReducer(state = initialState, cmd) {
         ...state,
         todos: [...state.lastTodos],
       }
-    case SET_FILTER_BY:
+    // case SET_FILTER_BY:
+
+    // isLoading
+    case SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: cmd.isLoading,
+      }
+
     default:
       return state
   }
