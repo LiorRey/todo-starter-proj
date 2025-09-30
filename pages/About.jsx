@@ -1,7 +1,6 @@
 const { useRef, useState } = React
 const { Outlet, NavLink } = ReactRouterDOM
 // const { PropTypes } = PropTypes
-// try commits
 
 import { utilService } from '../services/util.service.js'
 import { AboutTeam } from '../cmps/AboutTeam.jsx'
