@@ -1,15 +1,40 @@
 .todo-list {
-    padding: 15px 0 0;
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+  padding: 15px 0 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
 }
 
 .todo-list li {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    background-color: var(--clr1bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--clr1bg);
+}
+
+.todo-actions {
+  position: relative; /* needed for absolute positioning inside */
+}
+
+.confirm-remove-container {
+  position: absolute;
+  inset-block-end: 0; /* start hidden at the bottom */
+  width: 100%;
+  background-color: tomato;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  opacity: 0;
+  max-height: 0; /* start collapsed */
+  overflow: hidden; /* hide content when collapsed */
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  z-index: 1;
+}
+
+.confirm-remove-container.show {
+  opacity: 1;
+  max-height: 60px; /* matches the actual container height */
 }
