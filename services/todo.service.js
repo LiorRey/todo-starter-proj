@@ -28,6 +28,12 @@ function query(filterBy = {}) {
       todos = todos.filter(todo => todo.importance >= filterBy.importance)
     }
 
+    if (filterBy.showOption && filterBy.showOption !== "all") {
+      todos = todos.filter(todo =>
+        filterBy.showOption === "active" ? !todo.isDone : todo.isDone
+      )
+    }
+
     return todos
   })
 }
@@ -50,7 +56,6 @@ function save(todo) {
     return storageService.put(TODO_KEY, todo)
   } else {
     todo.createdAt = todo.updatedAt = Date.now()
-    todo.color = utilService.getRandomColor()
 
     return storageService.post(TODO_KEY, todo)
   }
@@ -61,7 +66,7 @@ function getEmptyTodo(txt = "", importance = 5) {
 }
 
 function getDefaultFilter() {
-  return { txt: "", importance: 0 }
+  return { txt: "", importance: 0, showOption: "all" }
 }
 
 function getFilterFromSearchParams(searchParams) {

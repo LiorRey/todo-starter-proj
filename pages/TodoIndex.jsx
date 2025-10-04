@@ -60,11 +60,15 @@ export function TodoIndex() {
       </div>
       <h2>Todos List</h2>
       <div className={isLoading ? "loading" : ""}>
-        <TodoList
-          todos={todos}
-          onRemoveTodo={onRemoveTodo}
-          onToggleTodo={onToggleTodo}
-        />
+        {!!todos.length ? (
+          <TodoList
+            todos={todos}
+            onRemoveTodo={onRemoveTodo}
+            onToggleTodo={onToggleTodo}
+          />
+        ) : (
+          <h3>No todos to show...</h3>
+        )}
       </div>
       <hr />
       <h2>Todos Table</h2>
