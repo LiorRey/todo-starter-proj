@@ -1,0 +1,10 @@
+.app-footer {
+  background-color: var(--clr1);
+  color: var(--clr2bg-light);
+  padding-block: 1em;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+}

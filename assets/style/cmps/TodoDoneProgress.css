@@ -1,0 +1,26 @@
+.todos-done-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+.todos-done-progress > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.todos-done-progress h3 {
+  margin: 0;
+}
+.todos-done-progress progress {
+  border: 2px solid black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+/* WebKit (Chrome, Edge, Safari) */
+.todos-done-progress progress::-webkit-progress-bar {
+  background-color: #eee; /* Progress bar background color */
+  border-radius: 10px;
+}
+.todos-done-progress progress::-webkit-progress-value {
+  background-color: lightseagreen; /* Progress bar color */
+}

@@ -3,6 +3,7 @@ const { Routes, Route } = ReactRouterDOM
 const { Provider } = ReactRedux
 
 import { AppHeader } from "./cmps/AppHeader.jsx"
+import { AppFooter } from "./cmps/AppFooter.jsx"
 import { Home } from "./pages/Home.jsx"
 import { About } from "./pages/About.jsx"
 import { TodoIndex } from "./pages/TodoIndex.jsx"
@@ -33,6 +34,7 @@ export function RootCmp() {
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </main>
+          <AppFooter />
         </section>
       </Router>
     </Provider>
