@@ -8,6 +8,7 @@ import { TodoFilter } from "../cmps/TodoFilter.jsx"
 import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { updateBalance } from "../store/actions/user.actions.js"
 
 const { useState, useEffect } = React
 const { Link, useSearchParams } = ReactRouterDOM
@@ -16,6 +17,7 @@ const { useSelector } = ReactRedux
 export function TodoIndex() {
   const todos = useSelector(storeState => storeState.todoModule.todos)
   const isLoading = useSelector(storeState => storeState.todoModule.isLoading)
+  const user = useSelector(storeState => storeState.userModule.loggedInUser)
 
   // Special hook for accessing search-params:
   const [searchParams, setSearchParams] = useSearchParams()
@@ -45,6 +47,8 @@ export function TodoIndex() {
         showSuccessMsg(
           `Todo is ${savedTodo.isDone ? "done!" : "back on your list"}`
         )
+
+        updateBalance(savedTodo.isDone ? 10 : 0)
       })
       .catch(() => showErrorMsg("Error occurred while toggling todo"))
   }

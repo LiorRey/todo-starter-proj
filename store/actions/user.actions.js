@@ -1,5 +1,5 @@
 import { userService } from "../../services/user.service.js"
-import { SET_USER } from "../reducers/user.reducer.js"
+import { SET_USER, SET_USER_BALANCE } from "../reducers/user.reducer.js"
 import { store } from "../store.js"
 
 export function login(credentials) {
@@ -34,6 +34,18 @@ export function logout(credentials) {
     })
     .catch(err => {
       console.log("User action -> Cannot logout", err)
+      throw err
+    })
+}
+
+export function updateBalance(addToBalance) {
+  return userService
+    .updateBalance(addToBalance)
+    .then(newBalance => {
+      store.dispatch({ type: SET_USER_BALANCE, balance: newBalance })
+    })
+    .catch(err => {
+      console.log("User action -> Cannot update balance", err)
       throw err
     })
 }

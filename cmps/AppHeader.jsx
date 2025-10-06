@@ -29,6 +29,9 @@ export function AppHeader() {
           <section>
             <Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>
             <button onClick={onLogout}>Logout</button>
+            <div>
+              <label>Your balance is: {user.balance}</label>
+            </div>
           </section>
         ) : (
           <section>
