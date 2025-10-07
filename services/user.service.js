@@ -1,4 +1,5 @@
 import { storageService } from "./async-storage.service.js"
+import { utilService } from "./util.service.js"
 
 export const userService = {
   getLoggedinUser,
@@ -9,6 +10,9 @@ export const userService = {
   query,
   getEmptyCredentials,
   updateBalance,
+  updateFullname,
+  updatePrefs,
+  updateUserDetails,
 }
 const STORAGE_KEY_LOGGEDIN = "user"
 const STORAGE_KEY = "userDB"
@@ -33,7 +37,16 @@ function signup({ username, password, fullname }) {
   const user = { username, password, fullname }
   user.createdAt = user.updatedAt = Date.now()
   user.balance = 0
-  //   user.activities = []
+  user.activities = []
+  // Get a CSS variable from :root
+  const rootStyles = getComputedStyle(document.documentElement)
+  const clr2BgLight = utilService.rgbToHex(
+    rootStyles.getPropertyValue("--clr2bg-light").trim()
+  )
+  const clr1 = utilService.rgbToHex(
+    rootStyles.getPropertyValue("--clr1").trim()
+  )
+  user.prefs = { color: clr2BgLight, bgColor: clr1 }
 
   return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser)
 }
@@ -52,6 +65,8 @@ function _setLoggedinUser(user) {
     _id: user._id,
     fullname: user.fullname,
     balance: user.balance,
+    activities: user.activities,
+    prefs: user.prefs,
   }
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
   return userToSave
@@ -82,6 +97,57 @@ function updateBalance(addToBalance) {
     })
 }
 
+function updateFullname(newFullname) {
+  const loggedInUser = getLoggedinUser()._id
+
+  return userService
+    .getById(loggedInUser)
+    .then(user => {
+      user.fullname = newFullname
+
+      return storageService.put(STORAGE_KEY, user)
+    })
+    .then(user => {
+      _setLoggedinUser(user)
+
+      return user.fullname
+    })
+}
+
+function updatePrefs(newPrefs) {
+  const loggedInUser = getLoggedinUser()._id
+
+  return userService
+    .getById(loggedInUser)
+    .then(user => {
+      user.prefs = { ...newPrefs }
+
+      return storageService.put(STORAGE_KEY, user)
+    })
+    .then(user => {
+      _setLoggedinUser(user)
+
+      return user.prefs
+    })
+}
+
+function updateUserDetails(newUserDetails) {
+  const loggedInUser = getLoggedinUser()._id
+
+  return userService
+    .getById(loggedInUser)
+    .then(user => {
+      user = { ...user, ...newUserDetails }
+
+      return storageService.put(STORAGE_KEY, user)
+    })
+    .then(user => {
+      _setLoggedinUser(user)
+
+      return user
+    })
+}
+
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
 // login({username: 'muki', password: 'muki1'})
 
@@ -95,4 +161,5 @@ function updateBalance(addToBalance) {
 //     updatedAt: 1711490430999,
 //     balance: 10000,
 //     activities: [{txt: 'Added a Todo', at: 1523873242735}]
+//     prefs: {color: 'black', bgColor: 'white'}
 // }

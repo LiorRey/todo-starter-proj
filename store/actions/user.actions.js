@@ -1,5 +1,10 @@
 import { userService } from "../../services/user.service.js"
-import { SET_USER, SET_USER_BALANCE } from "../reducers/user.reducer.js"
+import {
+  SET_USER,
+  SET_USER_BALANCE,
+  // SET_USER_FULLNAME,
+  // SET_USER_PREFS,
+} from "../reducers/user.reducer.js"
 import { store } from "../store.js"
 
 export function login(credentials) {
@@ -41,11 +46,47 @@ export function logout(credentials) {
 export function updateBalance(addToBalance) {
   return userService
     .updateBalance(addToBalance)
-    .then(newBalance => {
-      store.dispatch({ type: SET_USER_BALANCE, balance: newBalance })
+    .then(updatedBalance => {
+      store.dispatch({ type: SET_USER_BALANCE, balance: updatedBalance })
     })
     .catch(err => {
       console.log("User action -> Cannot update balance", err)
+      throw err
+    })
+}
+
+// export function updateFullname(newFullname) {
+//   return userService
+//     .updateFullname(newFullname)
+//     .then(updatedFullname => {
+//       store.dispatch({ type: SET_USER_FULLNAME, fullname: updatedFullname })
+//     })
+//     .catch(err => {
+//       console.log("User action -> Cannot update fullname", err)
+//       throw err
+//     })
+// }
+
+// export function updatePrefs(newPrefs) {
+//   return userService
+//     .updatePrefs(newPrefs)
+//     .then(updatedPrefs => {
+//       store.dispatch({ type: SET_USER_PREFS, prefs: updatedPrefs })
+//     })
+//     .catch(err => {
+//       console.log("User action -> Cannot update prefs", err)
+//       throw err
+//     })
+// }
+
+export function updateUserDetails(userDetailsToUpdate) {
+  return userService
+    .updateUserDetails(userDetailsToUpdate)
+    .then(updatedUser => {
+      store.dispatch({ type: SET_USER, user: updatedUser })
+    })
+    .catch(err => {
+      console.log("User action -> Cannot update user details", err)
       throw err
     })
 }

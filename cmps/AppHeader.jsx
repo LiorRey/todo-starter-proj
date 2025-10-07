@@ -11,6 +11,9 @@ import { showErrorMsg } from "../services/event-bus.service.js"
 export function AppHeader() {
   const navigate = useNavigate()
   const user = useSelector(storeState => storeState.userModule.loggedInUser)
+  const loggedInUser = useSelector(
+    storeState => storeState.userModule.loggedInUser
+  )
 
   function onLogout() {
     logout().catch(err => showErrorMsg("Error occurred during logout"))
@@ -21,13 +24,32 @@ export function AppHeader() {
     navigate("/")
   }
 
+  function getDefaultOrUserStyle() {
+    const style = {
+      color: "",
+      backgroundColor: "",
+    }
+
+    if (loggedInUser && loggedInUser.prefs) {
+      style.color = loggedInUser.prefs.color
+      style.backgroundColor = loggedInUser.prefs.bgColor
+    }
+
+    return style
+  }
+
   return (
-    <header className="app-header full main-layout">
+    <header
+      className="app-header full main-layout"
+      style={getDefaultOrUserStyle()}
+    >
       <section className="header-container">
         <h1>React Todo App</h1>
         {user ? (
           <section>
-            <Link to={`/user/${user._id}`}>Hello {user.fullname}</Link>
+            <Link to={`/user/${user._id}`}>
+              Hello <b>{user.fullname}</b>
+            </Link>
             <button onClick={onLogout}>Logout</button>
             <div>
               <label>Your balance is: {user.balance}</label>

@@ -6,6 +6,7 @@ export const utilService = {
   saveToStorage,
   animateCSS,
   getRandomColor,
+  rgbToHex,
 }
 
 function makeId(length = 6) {
@@ -97,4 +98,10 @@ function getRandomColor() {
     color += letters[Math.floor(Math.random() * 16)]
   }
   return color
+}
+
+function rgbToHex(rgb) {
+  // Expect format: "rgb(r, g, b)"
+  const [r, g, b] = rgb.match(/\d+/g).map(Number)
+  return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("")
 }
