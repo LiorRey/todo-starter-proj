@@ -7,6 +7,7 @@ export const utilService = {
   animateCSS,
   getRandomColor,
   rgbToHex,
+  getFormattedTime,
 }
 
 function makeId(length = 6) {
@@ -104,4 +105,13 @@ function rgbToHex(rgb) {
   // Expect format: "rgb(r, g, b)"
   const [r, g, b] = rgb.match(/\d+/g).map(Number)
   return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("")
+}
+
+function getFormattedTime(time) {
+  const timeDiff = new Date(Date.now() - time)
+  const timeDiffByMinutes = timeDiff.getMinutes()
+
+  if (timeDiffByMinutes < 60) return timeDiffByMinutes + " minutes ago | "
+  else if (timeDiff > 60) return "Couple of hours ago | "
+  else if (timeDiff > 60 * 24) return "A day or more ago | "
 }

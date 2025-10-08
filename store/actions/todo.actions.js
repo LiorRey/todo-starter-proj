@@ -8,6 +8,7 @@ import {
   UPDATE_TODO,
 } from "../reducers/todo.reducer.js"
 import { store } from "../store.js"
+import { addActivity } from "./user.actions.js"
 
 export function loadTodos(filterBy) {
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
@@ -36,6 +37,14 @@ export function saveTodo(todo) {
 
       return savedTodo
     })
+    .then(res => {
+      const actionName = todo._id ? "Updated" : "Added"
+
+      return addActivity(
+        `${actionName} a Todo` +
+          (!todo.txt.trim() ? " with no description" : `: ${todo.txt}`)
+      ).then(() => res)
+    })
     .catch(err => {
       console.log("Todo action -> Cannot save todo", err)
       throw err
@@ -48,6 +57,7 @@ export function removeTodo(todoId) {
     .then(() => {
       store.dispatch({ type: REMOVE_TODO, todoId })
     })
+    .then(() => addActivity("Removed the Todo: " + todoId))
     .catch(err => {
       console.log("Todo action -> Cannot remove todo", err)
       throw err
@@ -57,9 +67,12 @@ export function removeTodo(todoId) {
 export function removeTodoOptimistic(todoId) {
   store.dispatch({ type: REMOVE_TODO, todoId })
 
-  return todoService.remove(todoId).catch(err => {
-    store.dispatch({ type: UNDO_TODOS })
-    console.log("Todo action -> Cannot remove todo", err)
-    throw err
-  })
+  return todoService
+    .remove(todoId)
+    .then(() => addActivity("Removed the Todo: " + todoId))
+    .catch(err => {
+      store.dispatch({ type: UNDO_TODOS })
+      console.log("Todo action -> Cannot remove todo", err)
+      throw err
+    })
 }

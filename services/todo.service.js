@@ -1,5 +1,6 @@
 import { utilService } from "./util.service.js"
 import { storageService } from "./async-storage.service.js"
+import { userService } from "./user.service.js"
 
 const TODO_KEY = "todoDB"
 _createTodos()
@@ -50,14 +51,23 @@ function remove(todoId) {
 }
 
 function save(todo) {
+  if (!userService.getLoggedinUser())
+    return Promise.reject("User is not logged in")
+
+  // if - edit , else - add
   if (todo._id) {
     // TODO - updatable fields
     todo.updatedAt = Date.now()
     return storageService.put(TODO_KEY, todo)
   } else {
-    todo.createdAt = todo.updatedAt = Date.now()
+    // Create a shallow copy so that storageService.post()
+    // can safely add _id without mutating the original todo object :
+    const newTodo = { ...todo }
 
-    return storageService.post(TODO_KEY, todo)
+    newTodo.createdAt = newTodo.updatedAt = Date.now()
+    newTodo.color = utilService.getRandomColor()
+
+    return storageService.post(TODO_KEY, newTodo)
   }
 }
 

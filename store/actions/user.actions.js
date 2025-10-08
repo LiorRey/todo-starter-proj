@@ -13,6 +13,7 @@ export function login(credentials) {
     .then(user => {
       store.dispatch({ type: SET_USER, user })
     })
+    .then(() => addActivity("Logged in. Good to see you again!"))
     .catch(err => {
       console.log("User action -> Cannot login", err)
       throw err
@@ -25,6 +26,7 @@ export function signup(credentials) {
     .then(user => {
       store.dispatch({ type: SET_USER, user })
     })
+    .then(() => addActivity("Signed up. Welcome!"))
     .catch(err => {
       console.log("User action -> Cannot signup", err)
       throw err
@@ -85,8 +87,21 @@ export function updateUserDetails(userDetailsToUpdate) {
     .then(updatedUser => {
       store.dispatch({ type: SET_USER, user: updatedUser })
     })
+    .then(() => addActivity("Updated his/her details"))
     .catch(err => {
       console.log("User action -> Cannot update user details", err)
+      throw err
+    })
+}
+
+export function addActivity(activityDescription) {
+  return userService
+    .addActivity(activityDescription)
+    .then(updatedUser => {
+      store.dispatch({ type: SET_USER, user: updatedUser })
+    })
+    .catch(err => {
+      console.log("User action -> Cannot add activity", err)
       throw err
     })
 }

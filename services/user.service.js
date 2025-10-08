@@ -10,9 +10,10 @@ export const userService = {
   query,
   getEmptyCredentials,
   updateBalance,
-  updateFullname,
-  updatePrefs,
+  // updateFullname,
+  // updatePrefs,
   updateUserDetails,
+  addActivity,
 }
 const STORAGE_KEY_LOGGEDIN = "user"
 const STORAGE_KEY = "userDB"
@@ -38,15 +39,7 @@ function signup({ username, password, fullname }) {
   user.createdAt = user.updatedAt = Date.now()
   user.balance = 0
   user.activities = []
-  // Get a CSS variable from :root
-  const rootStyles = getComputedStyle(document.documentElement)
-  const clr2BgLight = utilService.rgbToHex(
-    rootStyles.getPropertyValue("--clr2bg-light").trim()
-  )
-  const clr1 = utilService.rgbToHex(
-    rootStyles.getPropertyValue("--clr1").trim()
-  )
-  user.prefs = { color: clr2BgLight, bgColor: clr1 }
+  user.prefs = _getDefaultPrefs()
 
   return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser)
 }
@@ -80,11 +73,23 @@ function getEmptyCredentials() {
   }
 }
 
+function _getDefaultPrefs() {
+  // Get a CSS variable from :root
+  const rootStyles = getComputedStyle(document.documentElement)
+  const clr2BgLight = utilService.rgbToHex(
+    rootStyles.getPropertyValue("--clr2bg-light").trim()
+  )
+  const clr1 = utilService.rgbToHex(
+    rootStyles.getPropertyValue("--clr1").trim()
+  )
+
+  return { color: clr2BgLight, bgColor: clr1 }
+}
+
 function updateBalance(addToBalance) {
   const loggedInUser = getLoggedinUser()._id
 
-  return userService
-    .getById(loggedInUser)
+  return getById(loggedInUser)
     .then(user => {
       user.balance += addToBalance
 
@@ -97,47 +102,67 @@ function updateBalance(addToBalance) {
     })
 }
 
-function updateFullname(newFullname) {
-  const loggedInUser = getLoggedinUser()._id
+// function updateFullname(newFullname) {
+//   const loggedInUser = getLoggedinUser()._id
 
-  return userService
-    .getById(loggedInUser)
-    .then(user => {
-      user.fullname = newFullname
+//   return getById(loggedInUser)
+//     .then(user => {
+//       user.fullname = newFullname
 
-      return storageService.put(STORAGE_KEY, user)
-    })
-    .then(user => {
-      _setLoggedinUser(user)
+//       return storageService.put(STORAGE_KEY, user)
+//     })
+//     .then(user => {
+//       _setLoggedinUser(user)
 
-      return user.fullname
-    })
-}
+//       return user
+//     })
+// }
 
-function updatePrefs(newPrefs) {
-  const loggedInUser = getLoggedinUser()._id
+// function updatePrefs(newPrefs) {
+//   const loggedInUser = getLoggedinUser()._id
 
-  return userService
-    .getById(loggedInUser)
-    .then(user => {
-      user.prefs = { ...newPrefs }
+//   return getById(loggedInUser)
+//     .then(user => {
+//       user.prefs = { ...newPrefs }
 
-      return storageService.put(STORAGE_KEY, user)
-    })
-    .then(user => {
-      _setLoggedinUser(user)
+//       return storageService.put(STORAGE_KEY, user)
+//     })
+//     .then(user => {
+//       _setLoggedinUser(user)
 
-      return user.prefs
-    })
-}
+//       return user
+//     })
+// }
 
 function updateUserDetails(newUserDetails) {
   const loggedInUser = getLoggedinUser()._id
 
-  return userService
-    .getById(loggedInUser)
+  return getById(loggedInUser)
     .then(user => {
       user = { ...user, ...newUserDetails }
+
+      return storageService.put(STORAGE_KEY, user)
+    })
+    .then(user => {
+      _setLoggedinUser(user)
+
+      return user
+    })
+}
+
+function addActivity(activityDescription) {
+  const loggedInUser = getLoggedinUser()
+
+  if (!loggedInUser) return Promise.reject("No logged-in user")
+
+  return getById(loggedInUser._id)
+    .then(user => {
+      if (!user.activities) user.activities = []
+
+      user.activities.unshift({
+        description: activityDescription,
+        time: Date.now(),
+      })
 
       return storageService.put(STORAGE_KEY, user)
     })

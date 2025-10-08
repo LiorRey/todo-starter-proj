@@ -1,4 +1,5 @@
 import { updateUserDetails } from "../store/actions/user.actions.js"
+import { ActivityList } from "../cmps/ActivityList.jsx"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 
 const { useState, useEffect } = React
@@ -68,7 +69,8 @@ export function UserDetails() {
   }
 
   if (!loggedInUser || !userDetails) return <div>No user...</div>
-  // const { activities } = userDetails
+  const { activities } = userDetails
+
   return (
     <section className="user-details">
       <h1>Profile</h1>
@@ -103,7 +105,8 @@ export function UserDetails() {
         <button>Update</button>
       </form>
 
-      {/* {activites && <} */}
+      <hr />
+      {activities && <ActivityList activities={activities} />}
     </section>
   )
 }
