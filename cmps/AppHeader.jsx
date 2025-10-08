@@ -44,7 +44,7 @@ export function AppHeader() {
       style={getDefaultOrUserStyle()}
     >
       <section className="header-container">
-        <h1>React Todo App</h1>
+        <h1>React Todo App - By LiorRey</h1>
         {user ? (
           <section>
             <Link to={`/user/${user._id}`}>
