@@ -65,7 +65,6 @@ function save(todo) {
     const newTodo = { ...todo }
 
     newTodo.createdAt = newTodo.updatedAt = Date.now()
-    newTodo.color = utilService.getRandomColor()
 
     return storageService.post(TODO_KEY, newTodo)
   }
