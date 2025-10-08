@@ -1,3 +1,4 @@
+import { utilService } from "../services/util.service.js"
 import { todoService } from "../services/todo.service.js"
 import {
   loadTodos,
@@ -7,8 +8,8 @@ import {
 import { TodoFilter } from "../cmps/TodoFilter.jsx"
 import { TodoList } from "../cmps/TodoList.jsx"
 import { DataTable } from "../cmps/data-table/DataTable.jsx"
-import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { updateBalance } from "../store/actions/user.actions.js"
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 
 const { useState, useEffect } = React
 const { Link, useSearchParams } = ReactRouterDOM
@@ -22,12 +23,12 @@ export function TodoIndex() {
   // Special hook for accessing search-params:
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const defaultFilter = todoService.getFilterFromSearchParams(searchParams)
+  const searchParamsFilter = todoService.getFilterFromSearchParams(searchParams)
 
-  const [filterBy, setFilterBy] = useState(defaultFilter)
+  const [filterBy, setFilterBy] = useState(searchParamsFilter)
 
   useEffect(() => {
-    setSearchParams(filterBy)
+    setSearchParams(utilService.getTruthyValues(filterBy))
     loadTodos(filterBy).catch(() => {
       showErrorMsg("Error occurred while loading todos")
     })

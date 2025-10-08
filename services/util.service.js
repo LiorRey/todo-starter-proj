@@ -8,6 +8,7 @@ export const utilService = {
   getRandomColor,
   rgbToHex,
   getFormattedTime,
+  getTruthyValues,
   debounce,
 }
 
@@ -115,6 +116,17 @@ function getFormattedTime(time) {
   if (timeDiffByMinutes < 60) return timeDiffByMinutes + " minutes ago | "
   else if (timeDiff > 60) return "Couple of hours ago | "
   else if (timeDiff > 60 * 24) return "A day or more ago | "
+}
+
+export function getTruthyValues(obj) {
+  const newObj = {}
+  for (const key in obj) {
+    const val = obj[key]
+    if (val) {
+      newObj[key] = val
+    }
+  }
+  return newObj
 }
 
 function debounce(callback, wait) {
