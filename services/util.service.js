@@ -8,6 +8,7 @@ export const utilService = {
   getRandomColor,
   rgbToHex,
   getFormattedTime,
+  debounce,
 }
 
 function makeId(length = 6) {
@@ -114,4 +115,14 @@ function getFormattedTime(time) {
   if (timeDiffByMinutes < 60) return timeDiffByMinutes + " minutes ago | "
   else if (timeDiff > 60) return "Couple of hours ago | "
   else if (timeDiff > 60 * 24) return "A day or more ago | "
+}
+
+function debounce(callback, wait) {
+  let timeoutId = null
+  return (...args) => {
+    window.clearTimeout(timeoutId)
+    timeoutId = window.setTimeout(() => {
+      callback(...args)
+    }, wait)
+  }
 }
